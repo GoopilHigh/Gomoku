@@ -68,10 +68,10 @@ int			                Gomoku::LoadImage()
     return EXIT_FAILURE;
   if (!image_Gwhite.loadFromFile("Res/Gwhite.png"))
     return EXIT_FAILURE;
-  if (!image_Winwhite.loadFromFile("Res/wolvesBlack.png"))
-    return EXIT_FAILURE;
-  if (!image_Winwblack.loadFromFile("Res/wolvesWhite.png"))
-    return EXIT_FAILURE;
+  // if (!image_Winwhite.loadFromFile("Res/wolvesBlack.png"))
+  //   return EXIT_FAILURE;
+  // if (!image_Winwblack.loadFromFile("Res/wolvesWhite.png"))
+  //   return EXIT_FAILURE;
   else
     {
       sprite_score.setTexture(image_score);

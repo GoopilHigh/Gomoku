@@ -15,8 +15,8 @@ RM	=	rm -rf
 OBJ     =	$(SRC:.cpp=.o)
 
 CPPFLAGS	+=	-lsfml-audio -lsfml-graphics -lsfml-window -lsfml-system -std=c++11
-CPPFLAGS	+=  -I./Headers
-CPPFLAGS	+=	-Wall -Wextra -Werror
+CPPFLAGS	+=  	-I./Headers
+#CPPFLAGS	+=	-Wall -Wextra -Werror
 
 NAME	=	Gomoku
 
