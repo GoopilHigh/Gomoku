@@ -18,7 +18,7 @@ public:
 public:
   sf::Event			event;
   sf::Font			font;
-  sf::Texture	    image_font;
+  sf::Texture	  image_font;
   sf::Sprite		sprite_font;
 };
 

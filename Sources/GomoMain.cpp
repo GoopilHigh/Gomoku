@@ -2,8 +2,6 @@
 
 int	main()
 {
-Starter Launch;
-
-Launch;
-return 0;
+  Starter Launch;
+  return 0;
 }

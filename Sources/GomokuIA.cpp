@@ -5,18 +5,20 @@
  * @Last Modified time: 2016-12-07 16:31:31
  */
 
-#include "Gomoku.hpp"
+#include "GomokuIA.hpp"
 #include "Rules.hpp"
 #include "WinGame.hpp"
+#include "AI.hpp"
 
-Gomoku::Gomoku() : _goban_test(362, 0)
+GomokuIA::GomokuIA() : _goban_test(362, 0)
 {
   InitGoban();
   LoadImage();
   GameLoop();
 }
 
-int			                Gomoku::InitGoban()
+
+int			                GomokuIA::InitGoban()
 {
   const int goban[] ={
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -41,14 +43,10 @@ int			                Gomoku::InitGoban()
   };
   if (!this->map.load("Res/tile.png", sf::Vector2u(50, 50), goban, 18, 18))
     return EXIT_FAILURE;
-  sprite_Gblack.setPosition(900, 1400);
-  goban_tab.push_back(sprite_Gblack);
-  sprite_Gwhite.setPosition(900, 1400);
-  goban_tab.push_back(sprite_Gwhite);
   return (0);
 }
 
-int			                Gomoku::LikeMusic()
+int			                GomokuIA::LikeMusic()
 {
   if (!sound_buff.loadFromFile("Res/Marco_Polo.ogg"))
     return EXIT_FAILURE;
@@ -61,7 +59,7 @@ int			                Gomoku::LikeMusic()
   return 0;
 }
 
-int			                Gomoku::LoadImage()
+int			                GomokuIA::LoadImage()
 {
   if (!font.loadFromFile("Res/Japonesa.ttf"))
     return EXIT_FAILURE;
@@ -85,36 +83,10 @@ int			                Gomoku::LoadImage()
   return (0);
 }
 
-int			                Gomoku::EventWhite()
+int			                GomokuIA::EventWhite()
 {
-  int                   x(this->GetXClick());
-  int                   y(this->GetYClick());
-  int                   test(0);
-  int                   myCase(0);
-
-  for (auto &elem : goban_tab) {
-    if (elem.getPosition().x == x && elem.getPosition().y == y)
-      test = 1;
-    }
-  if (test == 1 || x > 900 || y > 900)
-    return 1;
-  soundStone.play();
-  sprite_Gwhite.setPosition(x, y);
-  goban_tab.push_back(sprite_Gwhite);
-  myCase = ((y / 5) * 0.1) * 19 + ((x / 5) * 0.1);
-  this->_goban_test.at(myCase) = 2;
-  std::cout << "X = " << x << "\tY = " << y << std::endl;
-  std::cout << "Le Joueur Blanc capture la zone:\nx: " \
-           << ceil(event.mouseButton.x / 5 * 0.1)      \
-           << "\ny: " << ceil(event.mouseButton.y / 5 * 0.1)\
-           << std::endl;
-  return 0;
-}
-
-int			                Gomoku::EventBlack()
-{
-  int                   x(this->GetXClick());
-  int                   y(this->GetYClick());
+  int                   x(GetXClick());
+  int                   y(GetYClick());
   int                   test(0);
   int                   myCase(0);
 
@@ -122,8 +94,37 @@ int			                Gomoku::EventBlack()
     if (elem.getPosition().x == x && elem.getPosition().y == y)
       test = 1;
   }
-  if (test == 1 || x > 900 || y > 900)
+  if (test == 1)
     return 1;
+  if (x > 950)
+    sprite_Gwhite.setPosition(950, y);
+  else
+    sprite_Gwhite.setPosition(x, y);
+  soundStone.play();
+  goban_tab.push_back(sprite_Gwhite);
+  myCase = ((y / 5) * 0.1) * 19 + ((x / 5) * 0.1);
+  this->_goban_test.at(myCase) = 2;
+  std::cout << "X = " << x << "\tY = " << y << std::endl;
+  std::cout << "Le Joueur Blanc capture la zone:\nx: " \
+            << ceil(event.mouseButton.x / 5 * 0.1)      \
+            << "\ny: " << ceil(event.mouseButton.y / 5 * 0.1)\
+            << std::endl;
+  return 0;
+}
+
+int			                GomokuIA::EventBlack()
+{
+  int                   x(GetXClick());
+  int                   y(GetYClick());
+  int                   test(0);
+  int                   myCase(0);
+
+  for (auto &elem : goban_tab) {
+    if (elem.getPosition().x == x && elem.getPosition().y == y)
+      test = 1;
+    }
+    if (test == 1 || x > 900 || y > 900)
+      return 1;
   soundStone.play();
   sprite_Gblack.setPosition(x, y);
   goban_tab.push_back(sprite_Gblack);
@@ -131,13 +132,13 @@ int			                Gomoku::EventBlack()
   myCase = ((y / 5) * 0.1) * 19 + ((x / 5) * 0.1);
   this->_goban_test.at(myCase) = 1;
   std::cout << "Le Joueur Noir capture la zone:\nx: " \
-     << ceil(event.mouseButton.x / 5 * 0.1)      \
-     << "\ny: " << ceil(event.mouseButton.y / 5 * 0.1)\
-     << std::endl;
- return 0;
+            << ceil(event.mouseButton.x / 5 * 0.1)      \
+            << "\ny: " << ceil(event.mouseButton.y / 5 * 0.1)\
+            << std::endl;
+  return 0;
 }
 
-int            			  Gomoku::Score(std::vector<int> winStones)
+int            			  GomokuIA::Score(std::vector<int> winStones)
 {
   whiteSS = "White\nScore : \n\n  ";
   whiteSS += std::to_string(winStones[0]);
@@ -158,11 +159,12 @@ int            			  Gomoku::Score(std::vector<int> winStones)
   text_scoreB.setStyle(sf::Text::Bold);
 }
 
-int			              Gomoku::GameLoop()
+int			              GomokuIA::GameLoop()
 {
-  sf::RenderWindow      window(sf::VideoMode(1500, 950), "Gomoku Ninuki", sf::Style::Close);
+  sf::RenderWindow      window(sf::VideoMode(1500, 950), "GomokuIA Ninuki", sf::Style::Close);
   static int            Round;
-  Ruler *ruler = new Ruler(this->goban_tab, this->_goban_test);
+  Ruler *ruler =        new Ruler(this->goban_tab, this->_goban_test);
+  AI                    ai(*ruler, sprite_Gwhite);
   int                   res(0);
 
   LikeMusic();
@@ -175,47 +177,68 @@ int			              Gomoku::GameLoop()
         {
           std::vector<int> stones = ruler->getNbWinStone();
           Score(stones);
-          if (event.type == sf::Event::MouseButtonPressed
+          if(event.type == sf::Event::Closed || ruler->CheckThiefWinner() > 0)
+          {
+            sound.stop();
+            window.close();
+            WinGame Launch(Round);
+          }
+          if ((Round % 2) == 0
+              && event.type == sf::Event::MouseButtonPressed
               && event.mouseButton.button == sf::Mouse::Left
               && !ruler->CheckDoubleThree(Round + 1, GetXClick(), GetYClick()))
             {
               Round++;
-              if (Round % 2 == 1)
-                res = EventBlack();
-              else
-                res = EventWhite();
+              res = EventBlack();
               if (res == 1)
                 Round--;
               else if (ruler->CheckFor2Catch(Round) == 1)
                 std::cout << "L'équipe " << Round % 2 << " à volé 2 pierres" << std::endl;
               else if (ruler->CheckForWinner(Round) == 1)
-              {
-	                window.close();
+                {
                   sound.stop();
+	                window.close();
                   WinGame  launch(Round);
                   std::cout << "L'équipe " << Round % 2 << " à gagné, FIVEEEE" << std::endl;
                   return 0;
+                }
+              if (event.mouseButton.y >= 900 && event.mouseButton.x >= 1250) {
+              Rules  launch;
               }
             }
-        }
-      if (event.type == sf::Event::Closed || ruler->CheckThiefWinner() > 0)
-        window.close();
-      else {
-        window.draw(sprite_score);
-        window.draw(map);
-        window.draw(text_scoreW);
-        window.draw(text_scoreB);
-        for (int i = 0; i != goban_tab.size(); i++)
-          {
-            window.draw(goban_tab[i]);
+            else if (Round % 2 == 1)
+            {
+              ai.AIManager(Round);
+              ai.Play(Round);
+              std::pair<int, int>    toReturn = ai.getToReturn();
+              this->_goban_test.at(toReturn.second * 19 + toReturn.first) = 2;
+            //   ai.displayTab();
+              Round++;
+              if (ruler->CheckFor2Catch(Round) == 1)
+                std::cout << "L'équipe " << Round % 2 << " à volé 2 pierres" << std::endl;
+              else if (ruler->CheckForWinner(Round) == 1)
+              {
+                window.close();
+                sound.stop();
+                WinGame  launch(Round);
+                std::cout << "L'équipe " << Round % 2 << " à gagné, FIVEEEE" << std::endl;
+                return 0;
+                }
           }
-          window.display();
-          window.clear();
         }
-      }
+      window.draw(sprite_score);
+      window.draw(map);
+      window.draw(text_scoreW);
+      window.draw(text_scoreB);
+      for (int i = 0; i != goban_tab.size(); i++)
+        {
+          window.draw(goban_tab[i]);
+        }
+      window.display();
+      window.clear();
+    }
   sound.stop();
-  WinGame Launch(Round);
   return (0);
 }
 
-Gomoku::~Gomoku(){}
+GomokuIA::~GomokuIA(){}

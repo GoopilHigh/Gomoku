@@ -1,15 +1,15 @@
 //
-// Gomoku.hpp for Gomoku in /home/stephane/rendu/Gomo/Gomoku_SFML
+// GomokuIA.hpp for GomokuIA in /home/stephane/rendu/Gomo/Gomoku_SFML
 //
 // Made by Stéphane
 // Login   <stephane@epitech.net>
 //
 // Started on  Thu Nov 10 21:03:50 2016 Stéphane
-// Last update Sun Dec 11 21:50:08 2016 Jamais Thomas
+// Last update Sun Dec 11 19:36:24 2016 Jamais Thomas
 //
 
-#ifndef GOMOKU_HPP
-#define GOMOKU_HPP
+#ifndef GOMOKUIA_HPP
+#define GOMOKUIA_HPP
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
@@ -23,22 +23,22 @@
 #include "Goban.hpp"
 #include "Ruler.hpp"
 
-class Gomoku : public Goban
+class GomokuIA : public Goban
 {
 private:
-   int GetXClick(void) {
-      return ceil(event.mouseButton.x / 5 * 0.1) * 50;
-   }
-   int GetYClick(void) {
-      return ceil(event.mouseButton.y / 5 * 0.1) * 50;
-   }
-  std::vector<int> _goban_test;
+  std::vector<int>  _goban_test;
 public:
-  Gomoku();
-  ~Gomoku();
+  GomokuIA();
+  ~GomokuIA();
   int   LikeMusic();
   int   LoadImage();
   int   InitGoban();
+  int   GetXClick(void) {
+    return ceil(event.mouseButton.x / 5 * 0.1) * 50;
+  }
+  int   GetYClick(void) {
+    return ceil(event.mouseButton.y / 5 * 0.1) * 50;
+  }
   int   EventWhite();
   int   EventBlack();
   int   Score(std::vector<int> winStones);
@@ -69,7 +69,6 @@ public:
   std::string                   whiteSS;
   std::string                   blackSS;
   std::vector<sf::Sprite>       goban_tab;
-
 };
 
 #endif /* ! GOMOKU_HPP */
