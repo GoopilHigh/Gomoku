@@ -1,3 +1,3 @@
 # Gomoku
 
-Epitech projetc third year
+Gomoku ninuki
